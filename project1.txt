@@ -1,0 +1,55 @@
+#!/bin/bash
+
+echo "Press enter to continue"
+
+filename='/etc/passwd' 
+
+while read line;
+
+do
+username1=`tail -n 2 $filename | head -1  |cut -f 1 -d ':'`;
+username2=`tail -n 1 $filename  | cut -f 1 -d ':'`;
+group1=`groups user1 |cut -f 4 -d ' '`;
+group2=`groups user2 |cut -f 4 -d ' '`;
+echo $username1 'belongs to' $group1 
+echo $username2 'belongs to' $group2
+#captures only the last 2 entries
+#sets varaiables
+if [ -d /home/$username2 ];
+	then 
+		#cd /
+		rmdir -p /home/$username2/* &> /dev/null ;
+#removes directories if they exist and sanatizes output
+fi
+if [ -d /home/$username1 ];
+	then
+	rmdir -p /home/$username1/* &> /dev/null ;
+#removes directories if they exist and sanatizes output
+fi
+
+ mkdir -p /home/user1/folder1;
+ mkdir -p /home/user2/folder2;
+ echo '                                         '
+#spaces make things easier to read, dont ya think?
+ echo 'The following directories have been successfully created!'
+ ls -d /home/user1
+ ls -d /home/user2
+#makes folders for user1 and user2
+echo '		'
+
+ ls /usr > /home/user1/usrListing.txt
+ ls /etc > /home/user2/etcListing.txt
+
+ file1size=`ls -l --block-size=MB /home/user1/usrListing.txt|cut -f 5 -d ' ' `
+ file2size=`ls -l --block-size=MB /home/user2/etcListing.txt|cut -f 5 -d ' ' `
+
+ echo 'usrListing.txt is' $file1size 'big!'
+ echo 'etcListing.txt is' $file2size 'big!'
+
+#lists directorys in /usr and saves them to file in user1 home dir
+#lists directories in /etc and saves them to file in user2 home dir 
+#prints the size of each file in human readable form
+break
+
+done
+
